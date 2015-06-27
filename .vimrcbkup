@@ -1,0 +1,10 @@
+execute pathogen#infect()
+
+syntax on
+
+filetype plugin indent on
+
+set hidden
+
+let g:racer_cmd = "~/Developer/racer/target/release/racer"
+let $RUST_SRC_PATH="~/Developer/rust-1.0.0/src"
