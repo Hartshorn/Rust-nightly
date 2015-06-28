@@ -7,7 +7,7 @@ const HEIGHT: i32 = 100;
 fn main() {
 
     let c: i32 = WIDTH / 2_i32; // why is this backwards?
-    let m: i32 = HEIGHT / 2_i32 + 20_i32;
+    let m: i32 = HEIGHT / 2_i32 + 20;
 
     let glider: Vec<(i32, i32)> = vec![(14,12),
                                       (12,13),(14,13),
