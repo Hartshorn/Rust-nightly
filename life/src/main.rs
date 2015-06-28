@@ -5,16 +5,17 @@ const HEIGHT: i32 = 100;
 
 
 fn main() {
-    
+
+    let c: i32 = WIDTH / 2_i32; // why is this backwards?
+    let m: i32 = HEIGHT / 2_i32 + 20_i32;
+
     let glider: Vec<(i32, i32)> = vec![(14,12),
                                       (12,13),(14,13),
                                       (13,14),(14,14)];
     let blinker: Vec<(i32, i32)> = vec![(12,13),(13,13),(14,13)];
-    let c: i32 = WIDTH / 2_i32; // why is this backwards?
-    let m: i32 = HEIGHT / 2_i32 + 20_i32;
-    // ********  *****   ***      ******* ***** 
-    // lhs = (-20) ; rhs = (+20) ; mid = width / 2 
-    let flat: Vec<(i32, i32)> = 
+    // ********  *****   ***      ******* *****
+    // lhs = (-20) ; rhs = (+20) ; mid = width / 2
+    let flat: Vec<(i32, i32)> =
         vec![
             (c,m-18),(c,m-17),(c,m-16),(c,m-15),(c,m-14),(c,m-13),(c,m-12),(c,m-11),
             (c,m-9),(c,m-8),(c,m-7),(c,m-6),(c,m-5),
@@ -25,12 +26,17 @@ fn main() {
     life(&flat);
 }
 
+fn life<'a >(board: &'a Vec<(i32, i32)>) {
+    print!("{}[{}", '\x1b', "2J");
+    showcells(&board);
+    life(&nextgen(&board));
+}
 
 fn writeat<'a >(p: &'a (i32, i32), s: char) {
     let &(x, y) = p;
-    
+
     print!("{}[{};{}H", '\x1b', x, y);
-    print!("{}", s);
+    print!("\x1b[38;5;9m{}\x1b[0m", s);
 }
 
 
@@ -60,7 +66,7 @@ fn neighbors<'a >(pos: &'a (i32, i32)) -> Vec<(i32, i32)> {
 
 fn liveneighbors<'a >(board: &'a Vec<(i32, i32)>, pos: &'a (i32, i32)) -> usize {
     let mut alive: usize = 0;
-    
+
     for n in neighbors(pos) {
         if board.contains(&n) {
             alive += 1_usize;
@@ -81,8 +87,8 @@ fn survivors<'a >(board: &'a Vec<(i32, i32)>) -> Vec<(i32, i32)> {
 
 fn births<'a >(board: &'a Vec<(i32, i32)>) -> Vec<(i32, i32)> {
     let mut births: Vec<(i32, i32)> = vec!();
-    
-    for pos in board { 
+
+    for pos in board {
         for result in neighbors(pos) {
             if !board.contains(&result) && liveneighbors(board, &result) == 3 {
                 births.push(result);
@@ -91,47 +97,51 @@ fn births<'a >(board: &'a Vec<(i32, i32)>) -> Vec<(i32, i32)> {
     }
     births.sort();
     births.dedup();
-    
+
     births
 }
 
 fn nextgen<'a >(board: &'a Vec<(i32, i32)>) -> Vec<(i32, i32)> {
     let mut nextgen: Vec<(i32, i32)> = survivors(board);
-    
+
     for b in births(&board) {
         nextgen.push(b);
     }
     nextgen
 }
 
-fn life<'a >(board: &'a Vec<(i32, i32)>) {
-    print!("\x1b[2J");
-    showcells(&board);
-    thread::sleep_ms(100);
-    life(&nextgen(&board));
-}
-
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
+    #[test]
+    fn test_wrap() {
+        let pos1: (i32, i32) = (123, 345);
+        let pos2: (i32, i32) = super::wrap(&pos1);
+        let new_x: i32 = ((123 - 1) % super::WIDTH) + 1;
+        let new_y: i32 = ((345 - 1) % super::HEIGHT) + 1;
+
+        assert!(pos1 != pos2, "wrap: pos1 != pos2");
+        assert!(pos2 == (new_x, new_y), "wrap: new_x, new_y");
+    }
+
     #[test]
     fn test_dedup() {
         let mut rep: Vec<(i32, i32)> = vec![(1,2),(1,2),(1,2),(2,3)];
-        
+
         assert!(rep == [(1,2),(1,2),(1,2),(2,3)], "pre dedup");
         rep.sort();
         rep.dedup();
         assert!(rep == [(1,2),(2,3)], "post dedup");
     }
-    
+
     #[test]
     fn test_neighbors() {
         let pos: (i32, i32) = (2,3);
         assert!(super::neighbors(&pos).len() == 8, "neighbors");
     }
-    
+
     #[test]
     fn test_liveneighbors() {
         // point
@@ -153,9 +163,9 @@ mod tests {
         // far left and right side
         let lls: (i32, i32) = (1,3);
         let rrs: (i32, i32) = (5,3);
-        
+
         let blinker: Vec<(i32, i32)> = vec![lhs,mid,rhs];
-        
+
         // check points
         assert!(super::liveneighbors(&blinker, &lhs) == 1, "lhs");
         assert!(super::liveneighbors(&blinker, &rhs) == 1, "rhs");
@@ -177,7 +187,7 @@ mod tests {
         assert!(super::liveneighbors(&blinker, &btm) == 3, "btm");
         assert!(super::liveneighbors(&blinker, &btr) == 2, "btr");
     }
-    
+
     #[test]
     fn test_births() {
         let blinker: Vec<(i32, i32)> = vec![(2,3),(3,3),(4,3)];
@@ -185,7 +195,7 @@ mod tests {
         let mut onboard_vec: Vec<(i32, i32)> = vec!();
         let mut count_total: usize   = 0;
         let actual_length: usize = super::nextgen(&blinker).len();
-        
+
         for pos in &blinker {
             for res in super::neighbors(pos) {
                 count_total += 1;
@@ -199,33 +209,33 @@ mod tests {
         }
         liven_vec.sort();
         onboard_vec.sort();
-        
+
         liven_vec.dedup();
         onboard_vec.dedup();
-        
-        assert!(actual_length == 3, "Actual length: {}", 
+
+        assert!(actual_length == 3, "Actual length: {}",
                                         actual_length);
-        assert!(count_total == 24, "Total checked: {}", 
+        assert!(count_total == 24, "Total checked: {}",
                                         count_total);
-        assert!(liven_vec.len() == 2, "Total with 3 live neighbors: {}", 
+        assert!(liven_vec.len() == 2, "Total with 3 live neighbors: {}",
                                             liven_vec.len());
-        assert!(onboard_vec.len() == 3, "Total found on board: {}", 
+        assert!(onboard_vec.len() == 3, "Total found on board: {}",
                                             onboard_vec.len());
     }
-    
+
     #[test]
     fn test_survivors() {
         let blinker: Vec<(i32, i32)> = vec![(2,3),(3,3),(4,3)];
         let survivors: Vec<(i32, i32)> = super::survivors(&blinker);
-        
+
         assert!(survivors.len() == 1, "Total survivors: {}", survivors.len());
     }
-    
+
     #[test]
     fn test_nextgen() {
         let blinker: Vec<(i32, i32)> = vec![(2,3),(3,3),(4,3)];
         let nextgen: Vec<(i32, i32)> = super::nextgen(&blinker);
-        
+
         assert!(nextgen.len() == 3, "Nextgen length: {}", nextgen.len());
     }
 }

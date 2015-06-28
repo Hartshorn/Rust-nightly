@@ -14,7 +14,7 @@ struct Ball{
 
 fn main() {
     let mut ball = Ball { x: WIDTH / 2, y: HEIGHT / 2, d: 7};
-    
+
     loop {
         tick(&mut ball);
         thread::sleep_ms(80);
@@ -30,18 +30,18 @@ fn tick<'a > (ball: &'a mut Ball) {
 fn mv<'a >(ball: &'a mut Ball) {
     if collision(ball.x, ball.y, ball.d) {
         if is_corner(ball.x, ball.y) {
-            ball.d = flip(get_corner(ball.x, ball.y), 
-                          true, 
-                          direct(ball.d, 
-                                 get_corner(ball.x, ball.y), 
+            ball.d = flip(get_corner(ball.x, ball.y),
+                          true,
+                          direct(ball.d,
+                                 get_corner(ball.x, ball.y),
                                  true),
                           0);
         } else {
-            ball.d = flip(get_wall(ball.x, ball.y), 
-                          false, 
-                          direct(ball.d, 
-                                 get_wall(ball.x, ball.y), 
-                                 false), 
+            ball.d = flip(get_wall(ball.x, ball.y),
+                          false,
+                          direct(ball.d,
+                                 get_wall(ball.x, ball.y),
+                                 false),
                           ball.d);
         }
     }
@@ -69,7 +69,7 @@ fn get_corner(x: i32, y: i32) -> Wall {
 }
 
 fn d_fac(d: i32, is_x: bool) -> i32 {
-    
+
     if is_x {
         match d {
             5...7 => -1,
@@ -86,11 +86,11 @@ fn d_fac(d: i32, is_x: bool) -> i32 {
 }
 
 fn collision(x: i32, y: i32, d: i32) -> bool {
-    
+
     let in_list =
-        |n: i32, (x, y, z): (i32, i32, i32)| -> bool 
+        |n: i32, (x, y, z): (i32, i32, i32)| -> bool
             { n == x || n == y || n == z };
-    
+
     if x == 0 && in_list(d, (5,6,7)) {
         true
     } else if x == WIDTH && in_list(d, (1,2,3)) {
@@ -150,7 +150,7 @@ fn angle(d: i32 , wall: Wall) -> i32 {
 }
 
 fn flip(wall: Wall, corner: bool, direct: bool, d: i32) -> i32 {
-    
+
     if corner {
         if direct {
             match wall {
@@ -207,8 +207,8 @@ fn print_line() {
 
 fn mark(result: i32) {
     match result {
-        0 => print!("\x1b[38;5;46m O \x1b[0m"),
-        1 => print!("\x1b[38;5;9m * \x1b[0m"),
+        0 => print!("\x1b[38;5;46m O \x1b[0m"), // green ' O '
+        1 => print!("\x1b[38;5;9m * \x1b[0m"),  // red ' * '
         _ => unreachable!("mark, Bad result code!"),
     }
 }
