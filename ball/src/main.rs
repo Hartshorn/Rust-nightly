@@ -1,8 +1,8 @@
 // lets bounce a ball!
 use std::thread;
 
-const WIDTH:  i32 = 10;
-const HEIGHT: i32 = 8;
+const WIDTH:  i32 = 50;
+const HEIGHT: i32 = 1;
 
 enum Wall { North, South, East, West, TLeft, TRight, BLeft, BRight }
 
