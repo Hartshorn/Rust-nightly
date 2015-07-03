@@ -5,7 +5,6 @@ const HEIGHT: i32 = 100;
 
 
 fn main() {
-
     let c: i32 = WIDTH / 2_i32; // why is this backwards?
     let m: i32 = HEIGHT / 2_i32 + 20;
 
@@ -13,11 +12,10 @@ fn main() {
                                       (12,13),(14,13),
                                       (13,14),(14,14)];
     let blinker: Vec<(i32, i32)> = vec![(12,13),(13,13),(14,13)];
-<<<<<<< HEAD
     let c: i32 = WIDTH / 2_i32; // why is this backwards?
     let m: i32 = HEIGHT / 2_i32 + 20_i32;
-    // ********  *****   ***      ******* ***** 
-    // lhs = (-20) ; rhs = (+20) ; mid = width / 2 
+    // ********  *****   ***      ******* *****
+    // lhs = (-20) ; rhs = (+20) ; mid = width / 2
     let flat: Vec<(i32, i32)> = vec![
         (c,m-18),(c,m-17),(c,m-16),(c,m-15),(c,m-14),(c,m-13),(c,m-12),(c,m-11),
         (c,m-9),(c,m-8),(c,m-7),(c,m-6),(c,m-5),
@@ -25,8 +23,6 @@ fn main() {
         (c,m+8),(c,m+9),(c,m+10),(c,m+11),(c,m+12),(c,m+13),(c,m+14),
         (c,m+16),(c,m+17),(c,m+18),(c,m+19),(c,m+20),
     ];
-        
-=======
     // ********  *****   ***      ******* *****
     // lhs = (-20) ; rhs = (+20) ; mid = width / 2
     let flat: Vec<(i32, i32)> =
@@ -37,7 +33,6 @@ fn main() {
             (c,m+8),(c,m+9),(c,m+10),(c,m+11),(c,m+12),(c,m+13),(c,m+14),
             (c,m+16),(c,m+17),(c,m+18),(c,m+19),(c,m+20),
         ];
->>>>>>> e9d7dd5567c2890a7d006fe2603fd8cfe1458d9b
     life(&flat);
 }
 
