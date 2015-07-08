@@ -25,7 +25,7 @@ pub fn writestrings(list: Vec<((i32, i32), &str)>) {
 }
 
 pub fn move_to_bottom(h: i32) {
-    writeat(&(h + 5, 0), "\x1b");
+    writeat(&(h, 0), "\x1b");
 }
 
 pub fn y_axis(x: i32, y: i32) {
@@ -68,10 +68,10 @@ pub fn make_graph(oset: (i32, i32)) {
     draw_axes_with_nums(x, y);
 }
 
-pub fn graph(f: fn(i32) -> i32, oset: (i32, i32), n: i32) {
+pub fn graph(f: fn(i32) -> i32, oset: (i32, i32), h: i32,  n: i32) {
     let (o_x, o_y) = oset;
 
     for i in 0..n {
-        writeat(&(i, f(i)), "*");
+        writeat(&(h - i, f(i)), "*");
     }
 }

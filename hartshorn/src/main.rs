@@ -38,7 +38,7 @@ fn main() {
         stdin.lock().read_line(&mut line).unwrap();
         screenfunc::clearscreen();
         // draw::frame(w, h);
-        draw::moon(w, h, m);
+        //draw::moon(w, h, m);
         draw::stars(w, h);
         for _ in 1..6 {
             draw::mountain(w, h);

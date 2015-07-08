@@ -25,13 +25,12 @@ fn main() {
     }
 
     screen::clearscreen();
-    // screen::make_graph(oset);
-    screen::graph(f, oset, 10);
-
+    screen::graph(f, oset, h, 10);
+    
     screen::move_to_bottom(h);
 }
 
 
 fn f(x: i32) -> i32 {
-    x*x
+    x * x
 }
